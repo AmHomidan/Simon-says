@@ -320,6 +320,7 @@
 //*******************************************************************************************************************
 //This module will display which player is going (Player1 or Player2) and switching the players will be caused by the 
 //flip of switch 9 on the board
+	
 	module turn_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,turn);
 
 	input turn;
