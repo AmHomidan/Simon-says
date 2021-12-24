@@ -22,53 +22,52 @@
 
 
 //This calls all modules that will implement the overall functionality of our project.
-module main(switch_LEDs,turn, player1, player2, status, LED10,LED11,LED12,LED13,
-				LED14,LED15,LED16,LED20,LED21,LED22,LED23,LED24,LED25,LED26,LED30,LED31,LED32,LED33,
-				LED34,LED35,LED36,LED40,LED41,LED42,LED43,LED44,LED45,LED46,LED50,LED51,LED52,LED53,
-				LED54,LED55,LED56, cin,reset,cout,firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,
-				check,sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,counter,simon);
+
+	module main(switch_LEDs,turn, player1, player2, status, LED10,LED11,LED12,LED13,
+					LED14,LED15,LED16,LED20,LED21,LED22,LED23,LED24,LED25,LED26,LED30,LED31,LED32,LED33,
+					LED34,LED35,LED36,LED40,LED41,LED42,LED43,LED44,LED45,LED46,LED50,LED51,LED52,LED53,
+					LED54,LED55,LED56, cin,reset,cout,firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,
+					check,sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,counter,simon);
 
  
-input simon,turn,cin,reset,check,sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7;
+	input simon,turn,cin,reset,check,sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7;
 
-output wire LED10,LED11,LED12,LED13,LED14,LED15,LED16,LED20,LED21,LED22,LED23,LED24,LED25,LED26,LED30,
-		  LED31,LED32,LED33,LED34,LED35,LED36,LED40,LED41,LED42,LED43,LED44,LED45,LED46,LED50,LED51,LED52,LED53,LED54,LED55,LED56,LED60,LED61,
-		  LED62,LED63,LED64,LED65,LED66,cout;		  
+	output wire LED10,LED11,LED12,LED13,LED14,LED15,LED16,LED20,LED21,LED22,LED23,LED24,LED25,LED26,LED30,
+			  LED31,LED32,LED33,LED34,LED35,LED36,LED40,LED41,LED42,LED43,LED44,LED45,LED46,LED50,LED51,LED52,LED53,LED54,LED55,LED56,LED60,LED61,
+			  LED62,LED63,LED64,LED65,LED66,cout;		  
 
-output [3:0]firseg;
-output [1:0] status;
-output [31:0] counter;
-output [9:0] switch_LEDs; 
-output [31:0] player1, player2;
+	output [3:0]firseg;
+	output [1:0] status;
+	output [31:0] counter;
+	output [9:0] switch_LEDs; 
+	output [31:0] player1, player2;
 
-//*******************************************************************************************************
 //The block below will call our modules that will store the sequences and display them on
 //the seven-segment display. We also implemented a clock for the countdown for each player.
 
-clock clk(cin,cout,firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,turn,reset,counter);
+	clock clk(cin,cout,firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,turn,reset,counter);
 
-storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,counter,switch_LEDs,simon);
+	storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,counter,switch_LEDs,simon);
 
-outcome_SSD outcome(LED10,LED11,LED12,LED13,LED14,LED15,LED16,status);
+	outcome_SSD outcome(LED10,LED11,LED12,LED13,LED14,LED15,LED16,status);
 
-Static_SSD letter_P(0,0,1,1,0,0,0,LED20,LED21,LED22,LED23,LED24,LED25,LED26); //the letter 'P'
+	Static_SSD letter_P(0,0,1,1,0,0,0,LED20,LED21,LED22,LED23,LED24,LED25,LED26); //the letter 'P'
 
-turn_SSD player_turn(LED30,LED31,LED32,LED33,LED34,LED35,LED36,turn); //the current player playing
+	turn_SSD player_turn(LED30,LED31,LED32,LED33,LED34,LED35,LED36,turn); //the current player playing
 
-Simon_SSD letter_S(LED40,LED41,LED42,LED43,LED44,LED45,LED46,simon); //the letter 'S' for Simon 
+	Simon_SSD letter_S(LED40,LED41,LED42,LED43,LED44,LED45,LED46,simon); //the letter 'S' for Simon 
 
-Static_SSD Blank(1,1,1,1,1,1,1,LED50,LED51,LED52,LED53,LED54,LED55,LED56); //makes the SSD blank 
+	Static_SSD Blank(1,1,1,1,1,1,1,LED50,LED51,LED52,LED53,LED54,LED55,LED56); //makes the SSD blank 
 
-endmodule 
-//*******************************************************************************************************
+	endmodule 
 
 
-//*****************************************************************************************************************************
 
 // This module stores the values of each player in their respective registers and compares the player values
 // to check if Player 2 stored the same values as simon (Player1). It also indicates whether the outcome is
 // W or L (Win or Lose)
-module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,counter,switch_LEDs,simon);
+
+	module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,counter,switch_LEDs,simon);
 	input sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,check,reset,cin,simon;
 	reg [31:0] player1 = 8'b00000000;	 
 	reg [31:0] player2 = 8'b00000000;	
@@ -79,11 +78,9 @@ module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,count
 	
 	assign status = win;
 	
-//***********************************************************************************************
 //This always block will operate at the negative edge of the clock at which it will set
 //the corresponding values to the players when the switches are flipped.
-//
-//
+
 	always@(negedge cin)begin
 		
 			if(check == 0) begin// check player values
@@ -144,7 +141,7 @@ module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,count
 					if(turn == 1)begin
 						switch_LEDs[9] = 0;	
 					end		
-//---------------------------------------------
+
 					if(sw0 == 0)begin
 						switch_LEDs[0] = 0;
 					end
@@ -218,7 +215,7 @@ module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,count
 					end	
 					
 								
-//---------------------------------------------
+
 					if(sw0 == 0)begin
 						switch_LEDs[0] = 0;
 					end
@@ -252,37 +249,37 @@ module storing(sw0,sw1,sw2,sw3,sw4,sw5,sw6,sw7,turn,status,check,reset,cin,count
 				end
 
 			end
-	end
-//***********************************************************************************************
-endmodule
+	end 
+    endmodule
 
 
-//*******************************************************************************************************
+
 //This module was implemented in Lab 4, only a few tweaks were made to adjust for the time limit in our
 //case which was 9 seconds.
-module clock(cin,cout, firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,turn,reset,counter);
 
-input cin, turn,reset;
-output reg cout;
-output reg [3:0]firseg;
-output wire LED60,LED61,LED62,LED63,LED64,LED65,LED66;
+	module clock(cin,cout, firseg,LED60,LED61,LED62,LED63,LED64,LED65,LED66,turn,reset,counter);
 
-output [31:0] counter;
-reg [31:0] count; 
-parameter D = 32'd25000000;
+	input cin, turn,reset;
+	output reg cout;
+	output reg [3:0]firseg;
+	output wire LED60,LED61,LED62,LED63,LED64,LED65,LED66;
 
-assign counter = count;
-SSD ss1(firseg[3],firseg[2],firseg[1],firseg[0],LED60,LED61,LED62,LED63,LED64,LED65,LED66);
+	output [31:0] counter;
+	reg [31:0] count; 
+	parameter D = 32'd25000000;
 
-always @(posedge cin)
-begin
-   count <= count - 32'd1;
-      if(reset==0) begin //reset condition
-				cout <= ~cout;
-				count <= 450000000;
-				firseg <= 4'b1001; // 9
-      end
-		else if(reset==1) begin 
+	assign counter = count;
+	SSD ss1(firseg[3],firseg[2],firseg[1],firseg[0],LED60,LED61,LED62,LED63,LED64,LED65,LED66);
+
+	always @(posedge cin)
+	begin
+	   count <= count - 32'd1;
+	      if(reset==0) begin //reset condition
+					cout <= ~cout;
+					count <= 450000000;
+					firseg <= 4'b1001; // 9
+	      end
+			else if(reset==1) begin 
 		
 			if(firseg[3]==0 & firseg[2]==0 & firseg[1]==0 & firseg[0]==0)  
 				count <= 0;
@@ -297,172 +294,174 @@ begin
 				100000000: firseg <= firseg - 4'b0001;
 				 50000000: firseg <= firseg - 4'b0001;
 						 10: firseg <= firseg - 4'b0001;
-        endcase
-       end   
-end
-endmodule 
+       			 endcase
+      		 end   
+	end
+	endmodule 
 //*******************************************************************************************************
 //This module was implemented in Lab 2, no changes were made except that we had to create another module
 //to account for the letters P,G,O,L,w(displayed as "|_|")
-module SSD(w,x,y,z,LED0,LED1,LED2,LED3,LED4,LED5,LED6);
 
-input w,x,y,z;
-output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
+	module SSD(w,x,y,z,LED0,LED1,LED2,LED3,LED4,LED5,LED6);
 
-assign LED0=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(w & ~x & y & z)|(w & x & ~y & z);
-assign LED1=(~w & x & ~y & z)|(~w & x & y & ~z)|(w & ~x & y & z)|(w & x & ~y & ~z)|(w & x & y & ~z)|(w & x & y & z);
-assign LED2=(~w & ~x & y & ~z)|(w & x & y)|(w & x & ~z);
-assign LED3=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(~w & x & y & z)|(w & ~x & y & ~z)|(w & x & y & z);
-assign LED4=(~w & ~x & ~y & z)|(~w & ~x & y & z)|(~w & x & ~y & ~z)|(~w & x & ~y & z)|(w & ~x & ~y & z)|(~w & x & y & z);
-assign LED5=(~w & ~x & ~y & z)|(~w & ~x & y & ~z)|(~w & ~x & y & z)|(~w & x & y & z)|(w & x & ~y & z);
-assign LED6=(~w & ~x & ~y & ~z)|(~w & ~x & ~y & z)|(~w & x & y & z)|(w & x & ~y & ~z);
+	input w,x,y,z;
+	output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
 
-endmodule
+	assign LED0=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(w & ~x & y & z)|(w & x & ~y & z);
+	assign LED1=(~w & x & ~y & z)|(~w & x & y & ~z)|(w & ~x & y & z)|(w & x & ~y & ~z)|(w & x & y & ~z)|(w & x & y & z);
+	assign LED2=(~w & ~x & y & ~z)|(w & x & y)|(w & x & ~z);
+	assign LED3=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(~w & x & y & z)|(w & ~x & y & ~z)|(w & x & y & z);
+	assign LED4=(~w & ~x & ~y & z)|(~w & ~x & y & z)|(~w & x & ~y & ~z)|(~w & x & ~y & z)|(w & ~x & ~y & z)|(~w & x & y & z);
+	assign LED5=(~w & ~x & ~y & z)|(~w & ~x & y & ~z)|(~w & ~x & y & z)|(~w & x & y & z)|(w & x & ~y & z);
+	assign LED6=(~w & ~x & ~y & ~z)|(~w & ~x & ~y & z)|(~w & x & y & z)|(w & x & ~y & ~z);
+
+	endmodule
 
 //*******************************************************************************************************************
 //This module will display which player is going (Player1 or Player2) and switching the players will be caused by the 
 //flip of switch 9 on the board
-module turn_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,turn);
+	module turn_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,turn);
 
-input turn;
-reg w,x,y,z;
+	input turn;
+	reg w,x,y,z;
 
-output LED0,LED1,LED2,LED3,LED4,LED5,LED6;
+	output LED0,LED1,LED2,LED3,LED4,LED5,LED6;
 
-always@(turn,w,x,y,z)begin
-if(turn == 0) begin
-	// player1
-	w = 0;
-	x = 0;
-	y = 0;
-	z = 1;
-end
-else if(turn == 1) begin
-	//player2
-	w = 0;
-	x = 0;
-	y = 1;
-	z = 0;
-end
-end
+	always@(turn,w,x,y,z)begin
+	if(turn == 0) begin
+		// player1
+		w = 0;
+		x = 0;
+		y = 0;
+		z = 1;
+	end
+	else if(turn == 1) begin
+		//player2
+		w = 0;
+		x = 0;
+		y = 1;
+		z = 0;
+	end
+	end
 
-assign LED0=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(w & ~x & y & z)|(w & x & ~y & z);
-assign LED1=(~w & x & ~y & z)|(~w & x & y & ~z)|(w & ~x & y & z)|(w & x & ~y & ~z)|(w & x & y & ~z)|(w & x & y & z);
-assign LED2=(~w & ~x & y & ~z)|(w & x & y)|(w & x & ~z);
-assign LED3=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(~w & x & y & z)|(w & ~x & y & ~z)|(w & x & y & z);
-assign LED4=(~w & ~x & ~y & z)|(~w & ~x & y & z)|(~w & x & ~y & ~z)|(~w & x & ~y & z)|(w & ~x & ~y & z)|(~w & x & y & z);
-assign LED5=(~w & ~x & ~y & z)|(~w & ~x & y & ~z)|(~w & ~x & y & z)|(~w & x & y & z)|(w & x & ~y & z);
-assign LED6=(~w & ~x & ~y & ~z)|(~w & ~x & ~y & z)|(~w & x & y & z)|(w & x & ~y & ~z);
+	assign LED0=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(w & ~x & y & z)|(w & x & ~y & z);
+	assign LED1=(~w & x & ~y & z)|(~w & x & y & ~z)|(w & ~x & y & z)|(w & x & ~y & ~z)|(w & x & y & ~z)|(w & x & y & z);
+	assign LED2=(~w & ~x & y & ~z)|(w & x & y)|(w & x & ~z);
+	assign LED3=(~w & ~x & ~y & z)|(~w & x & ~y & ~z)|(~w & x & y & z)|(w & ~x & y & ~z)|(w & x & y & z);
+	assign LED4=(~w & ~x & ~y & z)|(~w & ~x & y & z)|(~w & x & ~y & ~z)|(~w & x & ~y & z)|(w & ~x & ~y & z)|(~w & x & y & z);
+	assign LED5=(~w & ~x & ~y & z)|(~w & ~x & y & ~z)|(~w & ~x & y & z)|(~w & x & y & z)|(w & x & ~y & z);
+	assign LED6=(~w & ~x & ~y & ~z)|(~w & ~x & ~y & z)|(~w & x & y & z)|(w & x & ~y & ~z);
 
-endmodule
+	endmodule
 
 //*******************************************************************************************************
 //This module displays the letters P as we pass in the values of each seperate LED. This module
 //will only be touched for displaying letters that will most likely remain static throughout the code.
 //
 
-module Static_SSD(y1,y2,y3,y4,y5,y6,y7,LED0,LED1,LED2,LED3,LED4,LED5,LED6);
+	module Static_SSD(y1,y2,y3,y4,y5,y6,y7,LED0,LED1,LED2,LED3,LED4,LED5,LED6);
 
-input y1,y2,y3,y4,y5,y6,y7;
-output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
+	input y1,y2,y3,y4,y5,y6,y7;
+	output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
 
-assign LED0= y1;
-assign LED1= y2;
-assign LED2= y3; 
-assign LED3= y4;
-assign LED4= y5;
-assign LED5= y6;
-assign LED6= y7;
+	assign LED0= y1;
+	assign LED1= y2;
+	assign LED2= y3; 
+	assign LED3= y4;
+	assign LED4= y5;
+	assign LED5= y6;
+	assign LED6= y7;
 
 
-endmodule
-//************************************************************************************    
-//This module displays the letters S (for simon)as we pass in the values of each seperate LED. This module
-//will only be touched for displaying letters that will most likely remain static throughout the code.
-module Simon_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,simon);
+	endmodule
+	//************************************************************************************    
+	//This module displays the letters S (for simon)as we pass in the values of each seperate LED. This module
+	//will only be touched for displaying letters that will most likely remain static throughout the code.
+	module Simon_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,simon);
 
-reg y1,y2,y3,y4,y5,y6,y7;
-input simon;
-output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
-always@(simon)begin
-	if(simon==1)begin
-		y1=0;
-		y2=1;
-		y3=0; 
-		y4=0;
-		y5=1;
-		y6=0;
-		y7=0;
+	reg y1,y2,y3,y4,y5,y6,y7;
+	input simon;
+	output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
+	always@(simon)begin
+		if(simon==1)begin
+			y1=0;
+			y2=1;
+			y3=0; 
+			y4=0;
+			y5=1;
+			y6=0;
+			y7=0;
+		end
+		else begin
+			y1=1;
+			y2=1;
+			y3=1; 
+			y4=1;
+			y5=1;
+			y6=1;
+			y7=1;
+		end
+
 	end
-	else begin
-		y1=1;
-		y2=1;
-		y3=1; 
-		y4=1;
-		y5=1;
-		y6=1;
-		y7=1;
-	end
+	assign LED0= y1;
+	assign LED1= y2;
+	assign LED2= y3; 
+	assign LED3= y4;
+	assign LED4= y5;
+	assign LED5= y6;
+	assign LED6= y7;
 
-end
-assign LED0= y1;
-assign LED1= y2;
-assign LED2= y3; 
-assign LED3= y4;
-assign LED4= y5;
-assign LED5= y6;
-assign LED6= y7;
-
-endmodule
+	endmodule
 //*******************************************************************************************************
 //This module displays the Win letter (w or |_|), Lose letter (L), or it will display nothing which would 
 //mean that the game is in progress. neutral can also mean reset as this allows the players to continue 
 //playing the game
-module outcome_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,status);
 
-output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
-input [1:0]status;
-reg y0,y1,y2,y3,y4,y5,y6;
+	module outcome_SSD(LED0,LED1,LED2,LED3,LED4,LED5,LED6,status);
 
-always@(status,y0,y1,y2,y3,y4,y5,y6)begin
-	if(status==2'b11)begin
-		//display w
-		y0 = 1;
-		y1 = 1;
-		y2 = 0;
-		y3 = 0;
-		y4 = 0;
-		y5 = 1;
-		y6 = 1;
+	output wire LED0,LED1,LED2,LED3,LED4,LED5,LED6;
+	input [1:0]status;
+	reg y0,y1,y2,y3,y4,y5,y6;
+
+	always@(status,y0,y1,y2,y3,y4,y5,y6)begin
+		if(status==2'b11)begin
+			//display w
+			y0 = 1;
+			y1 = 1;
+			y2 = 0;
+			y3 = 0;
+			y4 = 0;
+			y5 = 1;
+			y6 = 1;
+		end
+		else if(status==2'b01)begin
+			//display L
+			y0 = 1;
+			y1 = 1;
+			y2 = 1;
+			y3 = 0;
+			y4 = 0;
+			y5 = 0;
+			y6 = 1;
+		end
+		else if(status==2'b00)begin
+			//display nothing
+			y0 = 1;
+			y1 = 1;
+			y2 = 1;
+			y3 = 1;
+			y4 = 1;
+			y5 = 1;
+			y6 = 1;
+		end
 	end
-	else if(status==2'b01)begin
-		//display L
-		y0 = 1;
-		y1 = 1;
-		y2 = 1;
-		y3 = 0;
-		y4 = 0;
-		y5 = 0;
-		y6 = 1;
-	end
-	else if(status==2'b00)begin
-		//display nothing
-		y0 = 1;
-		y1 = 1;
-		y2 = 1;
-		y3 = 1;
-		y4 = 1;
-		y5 = 1;
-		y6 = 1;
-	end
-end
 
-assign LED0= y0;
-assign LED1= y1;
-assign LED2= y2; 
-assign LED3= y3;
-assign LED4= y4;
-assign LED5= y5;
-assign LED6= y6;
+	assign LED0= y0;
+	assign LED1= y1;
+	assign LED2= y2; 
+	assign LED3= y3;
+	assign LED4= y4;
+	assign LED5= y5;
+	assign LED6= y6;
 
-endmodule
+	endmodule
